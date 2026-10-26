@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "MY SAKE LOG — わたしの酒図鑑",
+  "short_name": "MY SAKE LOG",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f6ef",
+  "theme_color": "#244d40",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

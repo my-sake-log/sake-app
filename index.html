@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MY SAKE LOG">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#244d40">
+  <meta name="description" content="一杯の思い出を、自分だけの酒図鑑に。端末内で使うお酒の記録帳。">
+  <title>MY SAKE LOG — わたしの酒図鑑</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <header class="header"><a class="brand" href="./" aria-label="MY SAKE LOG ホーム"><span class="seal" aria-hidden="true">酒</span><span>MY SAKE LOG<small>わたしの酒図鑑</small></span></a><span class="local-badge">端末内に保存</span></header>
+  <main>
+    <div class="pwa-info"><span id="offline-state" role="status">オフライン利用の準備を確認しています…</span><button id="update-app" class="text-button" hidden>アプリを更新</button></div>
+    <section class="hero"><div><p class="eyebrow">SAVOR THE MOMENT</p><h1>あの一杯を、<br>わたしの一冊に。</h1><p class="hero-copy">おいしかった記憶も、次に飲みたい一本も。<br>写真とことばで綴る、わたしだけの酒図鑑。</p><button class="primary" id="add-record" disabled>＋ お酒を記録する</button></div><div class="hero-art" aria-hidden="true"><span class="art-circle"></span><div class="bottle"><span>一期<br>一会<small>SAKE</small></span></div><div class="cup"></div><span class="art-caption">一杯、一会。</span></div></section>
+    <section class="collection" aria-labelledby="collection-title">
+      <div class="section-head"><div><p class="eyebrow">MY COLLECTION</p><h2 id="collection-title">わたしの酒棚 <span id="total-count">0本</span></h2></div><button class="text-button" id="storage-open">保存とバックアップ ↗</button></div>
+      <div class="tabs" role="group" aria-label="表示切り替え"><button id="all-tab" class="tab active" aria-pressed="true">すべての記録</button><button id="ranking-tab" class="tab" aria-pressed="false">♡ お気に入りランキング</button></div>
+      <p id="ranking-help" class="hint" hidden>「また飲みたい」を選んだお酒を評価順に表示します。同評価は登録が新しい順です。</p>
+      <div class="filters"><label class="search"><span class="sr-only">名前・酒類・産地を検索</span><input type="search" id="search" placeholder="名前・酒類・産地でさがす" maxlength="100"></label><label><span class="sr-only">酒類で絞り込む</span><select id="type-filter"><option value="">すべての酒類</option></select></label><label><span class="sr-only">並び順</span><select id="sort"><option value="newest">登録が新しい順</option><option value="rating">評価が高い順</option></select></label></div>
+      <p id="result-count" class="hint" aria-live="polite"></p>
+      <div id="records" class="card-grid"></div>
+      <div id="empty" class="empty" hidden><span class="empty-mark" aria-hidden="true">酒</span><h3 id="empty-title">はじめの一本を、酒棚に。</h3><p id="empty-copy">ラベルの写真と、ひとことの感想から。<br>あなたのお酒の物語をはじめましょう。</p><button id="empty-add" class="secondary" disabled>＋ 最初のお酒を記録</button></div>
+    </section>
+    <aside class="storage-note">記録と写真は、このブラウザに保存されます。<br>大切な思い出は、定期的にバックアップを。</aside>
+  </main>
+  <footer><span>MY SAKE LOG</span><span>一杯を、ゆっくり愉しむ。</span></footer>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <dialog id="editor" aria-labelledby="editor-title"><form id="record-form" method="post"><div class="dialog-head"><div><p class="eyebrow">TASTE & MEMORIES</p><h2 id="editor-title">お酒を記録する</h2></div><button type="button" class="icon-button" data-close="editor" aria-label="閉じる">×</button></div>
+    <p class="hint">銘柄名・酒類・評価は必須です。</p>
+    <div class="photo-field"><label class="photo-label camera-label">カメラで撮る<input id="photo-camera" type="file" accept="image/*" capture="environment"></label><img id="photo-preview" alt="登録する写真のプレビュー" hidden><label class="photo-label">写真を選ぶ<input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif"></label><p class="hint">6MB以内。長辺1600pxまで縮小して保存します。<br>HEICを読み込めない場合はJPEGで選び直してください。</p><button type="button" id="remove-photo" class="text-button" hidden>写真を取り除く</button></div>
+    <label>銘柄名 <span class="required">必須</span><input name="name" required maxlength="100" placeholder="例：獺祭 純米大吟醸"></label>
+    <div class="form-row"><label>酒類 <span class="required">必須</span><select name="type" id="record-type" required></select></label><label>評価 <span class="required">必須</span><select name="rating" required><option value="5">★★★★★ とても好き</option><option value="4">★★★★☆ 好き</option><option value="3" selected>★★★☆☆ ふつう</option><option value="2">★★☆☆☆ いまひとつ</option><option value="1">★☆☆☆☆ 好みと違う</option></select></label></div>
+    <label>メーカー・酒蔵<input name="maker" maxlength="100" placeholder="例：旭酒造"></label><label>産地<input name="region" maxlength="100" placeholder="例：山口県"></label>
+    <div class="form-row"><label>飲んだ日<input name="drinkDate" type="date" min="0001-01-01" max="9999-12-31"></label><label>価格（円）<input name="price" type="number" inputmode="numeric" min="0" max="99999999" step="1" placeholder="例：1800"></label></div>
+    <label>テイスティングメモ<textarea name="notes" rows="4" maxlength="3000" placeholder="香り、口あたり、余韻。感じたままに。"></textarea></label><label>ペアリングした料理<textarea name="pairing" rows="2" maxlength="1000" placeholder="例：鯛のお刺身、だし巻き卵"></textarea></label>
+    <label class="check-label"><input name="again" type="checkbox"> ♡ また飲みたい</label><p id="form-error" class="error" role="alert"></p><div class="form-actions"><button type="button" class="secondary" data-close="editor">キャンセル</button><button id="save-record" type="submit" class="primary" disabled>記録を保存</button></div>
+  </form></dialog>
+  <dialog id="detail" aria-labelledby="detail-title"><div class="dialog-head"><p class="eyebrow">MY SAKE NOTES</p><button class="icon-button" data-close="detail" aria-label="閉じる">×</button></div><div id="detail-content"></div><p id="detail-error" class="error" role="alert"></p><div class="form-actions"><button id="delete-record" class="danger">削除する</button><button id="edit-record" class="primary">記録を編集</button></div></dialog>
+  <dialog id="storage" aria-labelledby="storage-title"><div class="dialog-head"><h2 id="storage-title">保存とバックアップ</h2><button class="icon-button" data-close="storage" aria-label="閉じる">×</button></div><div class="notice"><strong>保存先は、この端末・このブラウザです。</strong><p>写真も記録もIndexedDBに保存します。サーバーへの送信、自動同期、自動バックアップはありません。同じ端末でもブラウザやアクセス先（ホスト・ポート）が違うと別の保存先になります。</p></div><h3>大切な記録を守るために</h3><p>ブラウザのデータ消去、プライベートブラウズの終了、端末の容量不足などで失われることがあります。バックアップをダウンロードし、端末の外にも安全に保管してください。</p><button id="export" class="primary" disabled>↓ 写真込みでバックアップ</button><p class="hint">全記録をJSONファイルに保存します。暗号化されていないため、共有・保管先に注意してください。大きな写真が多いと処理に時間がかかります。復元できるファイルは50MB以内です。</p><hr><h3>バックアップから復元</h3><p>このアプリで書き出したJSONを選んでください。内容を確認後、<strong>現在の全記録を置き換えます</strong>。先に現在のバックアップを保存してください。</p><label class="file-button secondary">JSONファイルを選ぶ<input id="import" type="file" accept="application/json,.json" disabled></label><p id="storage-result" role="status"></p><hr><p class="hint">公開されるのはアプリのコードだけです。記録と写真を送信・公開する機能はありません。端末を共有する人は同じ記録を閲覧できます。Safariとホーム画面では記録が引き継がれると仮定せず、利用場所を決めてバックアップしてください。</p></dialog>
+  <noscript>記録を保存するにはJavaScriptを有効にしてください。</noscript>
+</body>
+</html>
